@@ -2,8 +2,7 @@
 
 use function \Deployer\{host, set};
 
-require_once 'recipe/common.php';
-require_once 'recipe/composer.php';
+require_once 'recipe/silverstripe.php';
 
 $host="";
 $user="";
