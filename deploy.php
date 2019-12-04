@@ -1,9 +1,8 @@
 <?php
 
-use function \Deployer\{host, set};
+use function \Deployer\{host, set, task, run, before};
 
-require_once 'recipe/common.php';
-require_once 'recipe/composer.php';
+require_once 'recipe/silverstripe.php';
 
 $host="";
 $user="";
@@ -13,6 +12,7 @@ $repo = "";
 set('default_stage', 'prod');
 set('keep_releases', 10);
 set('shared_dirs', ['public/assets']);
+set('writable_dirs', ['public/assets']);
 set('repository', $repo);
 
 host($host)
@@ -22,3 +22,14 @@ host($host)
     ->stage('prod')
     ->set('branch', 'master')
     ->multiplexing(false);
+
+
+task('copy:env', function (){
+    $env='.env';
+    if (\Deployer\test('[ -f /var/environments/'.$env.' ]')) {
+        run('cat /var/environments/'.$env.' > {{release_path}}/.env');
+    }else{
+        throw new Exception('Environment file does not exist');
+    }
+})->desc('copying env contents into project');
+before('silverstripe:buildflush', 'copy:env');
