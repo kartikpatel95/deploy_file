@@ -1,6 +1,6 @@
 <?php
 
-use function \Deployer\{host, set, task, run, before};
+use function \Deployer\{host, set, task, run, before, after};
 
 require_once 'recipe/silverstripe.php';
 
