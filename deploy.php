@@ -33,3 +33,13 @@ task('copy:env', function (){
     }
 })->desc('copying env contents into project');
 before('silverstripe:buildflush', 'copy:env');
+
+task('permission:change', function(){
+    run('chmod -R 755 {{deploy_path}}');
+})->desc('Correct file permissions');
+before('deploy:symlink', 'permission:change');
+
+task('fileowner:change', function(){
+    run('chown -R www-data:www-data {{deploy_path}}');
+})->desc('Correct file and directory owners');
+after('permission:change', 'fileowner:change');
