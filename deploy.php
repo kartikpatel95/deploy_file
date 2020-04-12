@@ -43,3 +43,8 @@ task('fileowner:change', function(){
     run('chown -R www-data:www-data {{deploy_path}}');
 })->desc('Correct file and directory owners');
 after('permission:change', 'fileowner:change');
+
+task('reload:php-fpm', function () {
+    run('sudo /etc/init.d/php7.2-fpm restart');
+})->desc('Restart php-fpm service');
+after('success', 'reload:php-fpm');
